@@ -2,59 +2,75 @@ package com.jamjam.bookjeok.domains.book.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "books")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class Book {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id")
     private Long id;
 
-    @Column
-    private Long publishers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id", nullable = false)
+    private Publisher publisher;
 
-    @Column
-    private Long bookCategories;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private BookCategory bookCategory;
 
-    @Column
+    @Column(name = "book_name", nullable = false)
     private String bookName;
 
-    @Column
+    @Column(name = "isbn", nullable = false)
     private String isbn;
 
-    @Column
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column
-    private LocalDateTime publishedAt;
+    @Column(name = "published_at", nullable = false)
+    private LocalDate publishedAt;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(name = "price", nullable = false)
     private int price;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(name = "stock_quantity", nullable = false)
     private int stockQuantity;
 
-    @Column
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @Column
-    @ColumnDefault("0")
-    private Boolean isDeleted;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 
+    @Builder
+    public Book(
+            Publisher publisher, BookCategory bookCategory, String bookName,
+            String isbn, String imageUrl, LocalDate publishedAt, int price,
+            int stockQuantity, LocalDateTime createdAt, LocalDateTime modifiedAt, boolean isDeleted
+    ) {
+        this.publisher = publisher;
+        this.bookCategory = bookCategory;
+        this.bookName = bookName;
+        this.isbn = isbn;
+        this.imageUrl = imageUrl;
+        this.publishedAt = publishedAt;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.isDeleted = isDeleted;
+    }
 
 }

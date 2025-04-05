@@ -1,23 +1,34 @@
 package com.jamjam.bookjeok.domains.book.entity;
 
+import com.jamjam.bookjeok.domains.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "stock_notifications")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Entity
+@Table(name = "stock_notification")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StockNotification {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notification_id")
     private Long id;
 
-    @Column
-    private Long bookId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
 
-    @Column
-    private Long memberUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid", nullable = false)
+    private Member member;
+
+    @Builder
+    public StockNotification(Book book, Member member) {
+        this.book = book;
+        this.member = member;
+    }
+
 }

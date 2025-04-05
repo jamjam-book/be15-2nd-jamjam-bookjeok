@@ -1,5 +1,6 @@
-package com.jamjam.bookjeok.domains.book.entity;
+package com.jamjam.bookjeok.domains.order.entity;
 
+import com.jamjam.bookjeok.domains.book.entity.Book;
 import com.jamjam.bookjeok.domains.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,12 +12,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "reviews")
+@Table(name = "carts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Cart {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
+    @Column(name = "cart_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,11 +28,8 @@ public class Review {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Column(name = "content", nullable = false)
-    private String content;
-
-    @Column(name = "rating", nullable = false)
-    private int rating;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -39,21 +37,16 @@ public class Review {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
-
     @Builder
-    public Review(
-            Member member, Book book, String content, int rating,
-            LocalDateTime createdAt, LocalDateTime modifiedAt, boolean isDeleted
+    public Cart(
+            Member member, Book book, int quantity,
+            LocalDateTime createdAt, LocalDateTime modifiedAt
     ) {
         this.member = member;
         this.book = book;
-        this.content = content;
-        this.rating = rating;
+        this.quantity = quantity;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.isDeleted = isDeleted;
     }
 
 }

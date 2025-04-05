@@ -1,43 +1,52 @@
 package com.jamjam.bookjeok.domains.notice.entity;
 
+import com.jamjam.bookjeok.domains.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "notices")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class Notice {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private Long id;
 
-    @Column
-    private Long writerUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_uid", referencedColumnName = "member_uid", nullable = false)
+    private Member writer;
 
-    @Column
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column // type = text
+    @Lob
+    @Column(name = "contents", nullable = false)
     private String contents;
 
-    @Column
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @Column
-    @ColumnDefault("0")
-    private Boolean isDeleted;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 
+    @Builder
+    public Notice(Member writer, String title, String contents, LocalDateTime createdAt, LocalDateTime modifiedAt, boolean isDeleted) {
+        this.writer = writer;
+        this.title = title;
+        this.contents = contents;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.isDeleted = isDeleted;
+    }
 
 }
