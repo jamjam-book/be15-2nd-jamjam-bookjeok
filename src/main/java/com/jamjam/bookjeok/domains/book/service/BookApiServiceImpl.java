@@ -84,16 +84,23 @@ public class BookApiServiceImpl implements BookApiService{
     public BookCategory findCategoryByCategoryName(String categoryName) {
 
         Optional<BookCategory> findCategory = bookCategoryRepository.findCategoryByCategoryName(categoryName);
+
+        return findCategory.orElseGet(() -> saveCategory(categoryName));
+    }
+
+    private BookCategory saveCategory(String categoryName) {
+
         Optional<BookCategory> newCategory = Optional.empty();
 
-        if(findCategory.isEmpty()){
-            BookCategoryDTO categoryDTO  =  new BookCategoryDTO(categoryName, LocalDateTime.now(), LocalDateTime.now(), false) ;
-            BookCategory category = modelMapper.map(categoryDTO, BookCategory.class);
-            bookCategoryRepository.save(category);
-            newCategory = bookCategoryRepository.findCategoryByCategoryName(categoryName);
-            return newCategory.orElseGet(null);
-        }
-        return findCategory.get();
+        BookCategoryDTO categoryDTO  =  new BookCategoryDTO(categoryName, LocalDateTime.now(), null, false) ;
+        BookCategory category = modelMapper.map(categoryDTO, BookCategory.class);
+
+        bookCategoryRepository.save(category);
+
+        newCategory = bookCategoryRepository.findCategoryByCategoryName(categoryName);
+
+        return newCategory.orElseGet(null);
+
     }
 
     @Override
@@ -101,16 +108,23 @@ public class BookApiServiceImpl implements BookApiService{
     public Publisher findPublisher(String publisherName) {
 
         Optional<Publisher> findPublisher = publisherRepository.findByPublisherName(publisherName);
+
+        return findPublisher.orElseGet(() -> savePublisher(publisherName));
+    }
+
+    private Publisher savePublisher(String publisherName) {
+
         Optional<Publisher> newPublisher = Optional.empty();
 
-        if(findPublisher.isEmpty()){
-            PublisherDTO publisherDTO = new PublisherDTO(publisherName);
-            Publisher publisher = modelMapper.map(publisherDTO, Publisher.class);
-            publisherRepository.save(publisher);
-            newPublisher = publisherRepository.findByPublisherName(publisherName);
-            return newPublisher.orElseGet(null);
-        }
-        return findPublisher.get();
+        PublisherDTO publisherDTO = new PublisherDTO(publisherName);
+        Publisher publisher = modelMapper.map(publisherDTO, Publisher.class);
+
+        publisherRepository.save(publisher);
+
+        newPublisher = publisherRepository.findByPublisherName(publisherName);
+
+        return newPublisher.orElseGet(null);
+
     }
 
     @Override
@@ -119,15 +133,13 @@ public class BookApiServiceImpl implements BookApiService{
 
         for(String author : authors) {
             Optional<Author> findAuthor = authorRepository.findByAuthorName(author);
-            Optional<Author> newAuthor = Optional.empty();
+
             Long authorId = 0L;
 
             if(findAuthor.isEmpty()){
-                AuthorDTO authorDTO = new AuthorDTO(author);
-                Author mapAuthor = modelMapper.map(authorDTO, Author.class);
-                authorRepository.save(mapAuthor);
-                newAuthor = authorRepository.findByAuthorName(author);
-                authorId = newAuthor.get().getAuthorId();
+
+                authorId = saveAuthor(author);
+
             } else  {
                 authorId = findAuthor.get().getAuthorId();
             }
@@ -135,6 +147,21 @@ public class BookApiServiceImpl implements BookApiService{
             registBookAuthor(bookId, authorId);
 
         }
+    }
+
+    private Long saveAuthor(String author) {
+
+        Optional<Author> newAuthor = Optional.empty();
+
+        AuthorDTO authorDTO = new AuthorDTO(author);
+        Author mapAuthor = modelMapper.map(authorDTO, Author.class);
+
+        authorRepository.save(mapAuthor);
+
+        newAuthor = authorRepository.findByAuthorName(author);
+
+        return newAuthor.get().getAuthorId();
+
     }
 
     @Transactional
