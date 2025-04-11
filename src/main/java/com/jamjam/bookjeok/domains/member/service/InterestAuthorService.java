@@ -3,7 +3,7 @@ package com.jamjam.bookjeok.domains.member.service;
 import com.jamjam.bookjeok.domains.book.entity.Author;
 import com.jamjam.bookjeok.domains.book.repository.AuthorRepository;
 import com.jamjam.bookjeok.domains.member.dto.InterestAuthorDTO;
-import com.jamjam.bookjeok.domains.member.dto.request.InterestAuthorCreatRequest;
+import com.jamjam.bookjeok.domains.member.dto.request.InterestAuthorRequest;
 import com.jamjam.bookjeok.domains.member.entity.InterestAuthor;
 import com.jamjam.bookjeok.domains.member.entity.InterestAuthorId;
 import com.jamjam.bookjeok.domains.member.repository.mapper.InterestAuthorMapper;
@@ -36,10 +36,10 @@ public class InterestAuthorService {
     }
 
     @Transactional
-    public String createInterestAuthor(InterestAuthorCreatRequest interestAuthorCreatRequest){
+    public String createInterestAuthor(InterestAuthorRequest interestAuthorRequest){
 
         int totalInterestAuthor = interestAuthorMapper
-                .countInterestAuthor(interestAuthorCreatRequest.getMemberUid());
+                .countInterestAuthor(interestAuthorRequest.getMemberUid());
 
         // 작가의 인원이 30명이라면 추가할 수 없음
         if(totalInterestAuthor == 30){
@@ -47,12 +47,12 @@ public class InterestAuthorService {
         }
 
         // 작가 가져오기 (작가의 아이디를 가져오기 위해서 가져오는 것)
-        Author author = authorRepository.findByAuthorName(interestAuthorCreatRequest.getAuthorName())
+        Author author = authorRepository.findByAuthorName(interestAuthorRequest.getAuthorName())
                 .orElseThrow(() -> new AuthorNotFoundException(MemberErrorCode.NOT_FOUND_AUTHOR));
 
         // 작가의 아이디와 멤버 uid 전달하기
         InterestAuthorId newInterestAuthorId =
-                new InterestAuthorId(author.getAuthorId(), interestAuthorCreatRequest.getMemberUid());
+                new InterestAuthorId(author.getAuthorId(), interestAuthorRequest.getMemberUid());
 
         // 이미 관심 작가가 등록되어 있는 경우 예외 처리하기
         if(interestAuthorRepository.existsById(newInterestAuthorId)){
@@ -65,7 +65,22 @@ public class InterestAuthorService {
 
         interestAuthorRepository.save(newInterestAuthor);
 
-        return interestAuthorCreatRequest.getAuthorName();
+        return interestAuthorRequest.getAuthorName();
     }
+
+    @Transactional
+    public void deleteInterestAuthor(InterestAuthorRequest interestAuthorRequest) {
+        Author author = authorRepository.findByAuthorName(interestAuthorRequest.getAuthorName())
+                .orElseThrow(() -> new AuthorNotFoundException(MemberErrorCode.NOT_FOUND_AUTHOR));
+
+        InterestAuthorId interestAuthorId =
+                new InterestAuthorId(author.getAuthorId(), interestAuthorRequest.getMemberUid());
+
+        InterestAuthor interestAuthor = interestAuthorRepository.findById(interestAuthorId)
+                .orElseThrow(() -> new AuthorNotFoundException(MemberErrorCode.NOT_REGIST_AUTHOR));
+
+        interestAuthorRepository.delete(interestAuthor);
+    }
+
 
 }

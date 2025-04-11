@@ -2,7 +2,7 @@ package com.jamjam.bookjeok.domains.member.controller;
 
 import com.jamjam.bookjeok.common.dto.ApiResponse;
 import com.jamjam.bookjeok.domains.member.dto.InterestAuthorDTO;
-import com.jamjam.bookjeok.domains.member.dto.request.InterestAuthorCreatRequest;
+import com.jamjam.bookjeok.domains.member.dto.request.InterestAuthorRequest;
 import com.jamjam.bookjeok.domains.member.dto.response.InterestAuthorResponse;
 import com.jamjam.bookjeok.domains.member.service.InterestAuthorService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class InterestAuthorController {
 
     private final InterestAuthorService interestAuthorService;
 
-    @GetMapping("{memberId}/interest-authors")
+    @GetMapping("/{memberId}/interest-authors")
     public ResponseEntity<ApiResponse<List<InterestAuthorDTO>>> getInterestAuthorByMemberId(
             @PathVariable String memberId
     ){
@@ -34,7 +34,7 @@ public class InterestAuthorController {
 
     @PostMapping("/interest-author")
     public ResponseEntity<ApiResponse<InterestAuthorResponse>> createInterestAuthor(
-            @RequestBody @Validated InterestAuthorCreatRequest request
+            @RequestBody @Validated InterestAuthorRequest request
     ){
 
         interestAuthorService.createInterestAuthor(request);
@@ -47,4 +47,14 @@ public class InterestAuthorController {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
     }
+
+    @DeleteMapping("/interest-author")
+    public ResponseEntity<ApiResponse<Void>> deleteInterestAuthor(
+            @RequestBody @Validated InterestAuthorRequest request
+    ){
+        interestAuthorService.deleteInterestAuthor(request);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
 }

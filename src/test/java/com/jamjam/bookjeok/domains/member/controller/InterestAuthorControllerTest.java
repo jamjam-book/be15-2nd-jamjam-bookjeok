@@ -1,7 +1,7 @@
 package com.jamjam.bookjeok.domains.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jamjam.bookjeok.domains.member.dto.request.InterestAuthorCreatRequest;
+import com.jamjam.bookjeok.domains.member.dto.request.InterestAuthorRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,10 +45,10 @@ public class InterestAuthorControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("즐겨찾기 등록하기")
+    @DisplayName("관심 작가 등록하기")
     @Test
     void createInterestAuthorTest() throws Exception {
-        InterestAuthorCreatRequest request = new InterestAuthorCreatRequest("공지영", 2L);
+        InterestAuthorRequest request = new InterestAuthorRequest("공지영", 2L);
 
         mockMvc.perform(post("/api/v1/interest-author")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -56,6 +57,17 @@ public class InterestAuthorControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.authorName").value("공지영"))
                 .andReturn();
+    }
+
+    @DisplayName("관심 작가 삭제하기")
+    @Test
+    void deleteInterestAuthorTest() throws Exception {
+        InterestAuthorRequest request = new InterestAuthorRequest("정약용", 2L);
+
+        mockMvc.perform(delete("/api/v1/interest-author")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(jsonPath("$.success").value(true));
     }
 
 }

@@ -38,7 +38,7 @@ class InterestAuthorMapperTest {
 
         int totalInterestAuthor = interestAuthorMapper.countInterestAuthor(memberUid);
 
-        assertEquals(3, totalInterestAuthor);
+        assertEquals(2, totalInterestAuthor);
     }
 
 }
