@@ -5,12 +5,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "posts")
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
@@ -51,6 +53,17 @@ public class Post {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.isDeleted = isDeleted;
+    }
+
+    public void updatePost(String title, String content, LocalDateTime modifiedAt) {
+        this.title = title;
+        this.content = content;
+        this.modifiedAt = modifiedAt;
+    }
+
+    public void deletePost(LocalDateTime modifiedAt, boolean isDeleted) {
+        this.modifiedAt = modifiedAt;
+        this.isDeleted = true;
     }
 
 }
