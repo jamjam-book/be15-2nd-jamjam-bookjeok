@@ -65,5 +65,4 @@ public class Post {
         this.modifiedAt = modifiedAt;
         this.isDeleted = true;
     }
-
 }

@@ -56,7 +56,6 @@ public class PostService {
 
         Post newPost = postRepository.save(post);
         return buildPostResponse(newPost);
-
     }
 
     private PostResponse buildPostResponse(Post post) {
@@ -67,7 +66,6 @@ public class PostService {
                 .writerUid(post.getWriterUid())
                 .createdAt(post.getCreatedAt())
                 .build();
-
     }
 
     // 게시글 삭제
@@ -80,9 +78,7 @@ public class PostService {
             throw new PostNotFoundException("해당 게시글을 찾을 수 없음.");
 
         }
-
         postRepository.deleteById(postId);
-
     }
 
     public PostResponse updatePost(Long postId, PostRequest postRequest) {

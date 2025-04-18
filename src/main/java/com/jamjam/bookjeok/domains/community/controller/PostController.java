@@ -30,14 +30,12 @@ public class PostController {
     private PostRequest postRequest;
     private PostResponse postResponse;
 
-
     // 게시글 목록 조회
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<List<PostListDTO>>> getAllPosts() {
         List<PostListDTO> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(posts));
     }
-
 
     // 게시글 상세 조회
     @GetMapping("/detail/{postId}")
@@ -52,7 +50,6 @@ public class PostController {
 
     }
 
-
     // 게시글 등록
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<PostResponse>> createPost(
@@ -64,7 +61,6 @@ public class PostController {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
     }
-
 
     // 게시글 수정
     @PutMapping("/update/{postId}")
@@ -89,6 +85,5 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.success(null));
-
     }
 }

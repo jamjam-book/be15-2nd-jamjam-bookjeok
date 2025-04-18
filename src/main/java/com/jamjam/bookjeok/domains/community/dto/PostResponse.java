@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class PostResponse {
+
     private Long postId;
     private String title;
     private String content;
     private Long writerUid;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

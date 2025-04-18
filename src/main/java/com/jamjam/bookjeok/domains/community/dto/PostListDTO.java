@@ -15,5 +15,4 @@ public class PostListDTO {
     private Long writerUid;
     private String title;
     private String nickname;
-
 }

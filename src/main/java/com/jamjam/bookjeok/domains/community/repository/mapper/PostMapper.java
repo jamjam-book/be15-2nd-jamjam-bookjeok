@@ -13,5 +13,4 @@ public interface PostMapper {
     List<PostListDTO> findAll(); // 게시글 목록 조회
 
     PostDTO findByPostId(Map <String, Object> params);
-
 }
